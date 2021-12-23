@@ -209,6 +209,71 @@ public class OddEvenLinkedList {
      * Execution: O(n) - Space: O(1)
      * 
      * Runtime: 0 ms, faster than 100.00% of Java online submissions.
+     * Memory Usage: 38.4 MB, less than 79.60% of Java online submissions.
+     * 
+     * 70 / 70 test cases passed.
+     * Status: Accepted
+     * Runtime: 0 ms
+     * Memory Usage: 38.4 MB
+     */
+    static ListNode oddEvenList2(ListNode head) {
+
+        // **** sanity check(s) ****
+        if (head == null) return null;
+        if (head.next == null) return head;
+
+        // **** initialization ****
+        ListNode evenHead   = null;         // even linked list head
+        ListNode evenTail   = null;         // even linked list tail
+
+        ListNode tail       = null;         // input list tail node
+
+        // **** traverse the input linked list ****
+        for (ListNode p = head; p != null; p = p.next) {
+
+            // **** check if we are done traversing the linked list ****
+            if (p.next == null) {
+                tail = p;
+                break;
+            }
+
+            // **** point to next even node ****
+            ListNode even = p.next;
+
+            // **** set tail of linked list ****
+            if (even.next == null) tail = p;
+
+            // *** skip the even node ****
+            p.next = even.next;
+
+            // **** add even node to tail of evenHead ****
+            even = new ListNode(even.val);
+
+            // **** update the head and tail of the even linked list ****
+            if (evenHead == null) {
+                evenHead = even;
+                evenTail = even;
+            } else {
+                evenTail.next = even;
+                evenTail = even;
+            }
+        }
+
+        // **** append even to odd linked list ****
+        tail.next = evenHead;
+
+        // **** return head of odd-even linked list ****
+        return head;
+    }
+
+
+    /**
+     * Given a singly linked list, 
+     * group all odd nodes together followed by the even nodes.
+     * 
+     * Execution: O(n) - Space: O(1)
+     * 
+     * Runtime: 0 ms, faster than 100.00% of Java online submissions.
      * Memory Usage: 38.9 MB, less than 22.15% of Java online submissions.
      */
     static ListNode oddEvenList(ListNode head) {
@@ -286,6 +351,16 @@ public class OddEvenLinkedList {
 
         // **** display odd even linked list ****
         System.out.println("main <<< oddEvenList1: " + display(head));
+
+
+        // **** populate linked list ****
+        head = populate(arr);
+
+        // **** generate odd even linked list ****
+        head = oddEvenList2(head);
+
+        // **** display odd even linked list ****
+        System.out.println("main <<< oddEvenList2: " + display(head));
 
 
         // **** populate linked list ****
