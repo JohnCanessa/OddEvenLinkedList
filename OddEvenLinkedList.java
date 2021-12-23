@@ -34,15 +34,14 @@ public class OddEvenLinkedList {
 
 
     /**
-     * Populate linked list with the specified array.
+     * Populate linked list from the contents of the specified array.
      * 
      * !!! NOT PART OF SOLUTION !!!
      */
     static ListNode populate(int[] arr) {
 
         // **** sanity ckeck(s) ****
-        if (arr.length == 0)
-            return null;
+        if (arr.length == 0) return null;
 
         // **** initialization ****
         ListNode h = null;
@@ -62,26 +61,36 @@ public class OddEvenLinkedList {
      * 
      * !!! NOT PART OF SOLUTION !!!
      */
-    static void display(ListNode head) {
+    static String display(ListNode head) {
 
         // **** sanity check(s) ****
-        if (head == null)
-            return;
+        if (head == null) return "";
 
-        // **** traverse the link list ****
+        // **** initialization ****
+        StringBuilder sb = new StringBuilder();
+
+        // **** traverse link list ****
         for (ListNode p = head; p != null; p = p.next) {
-            System.out.print(p.val);
+            sb.append(p.val);
             if (p.next != null)
-                System.out.print("->");
+                sb.append("->");
         }
+
+        // **** ****
+        return sb.toString();
     }
 
 
     /**
+     * Given a singly linked list, 
+     * group all odd nodes together followed by the even nodes.
+     * 
+     * Execution: O(n) - Space: O(1)
+     * 
      * Runtime: 0 ms, faster than 100.00% of Java online submissions.
      * Memory Usage: 38.9 MB, less than 22.15% of Java online submissions.
      */
-    static ListNode oddEvenList(ListNode head) {
+    static ListNode oddEvenList0(ListNode head) {
 
         // **** sanity checks ****
         if (head == null)
@@ -133,38 +142,109 @@ public class OddEvenLinkedList {
 
 
     /**
+     * Given a singly linked list, 
+     * group all odd nodes together followed by the even nodes.
      * 
+     * Execution: O(n) - Space: O(1)
+     * 
+     * Runtime: 0 ms, faster than 100.00% of Java online submissions.
+     * Memory Usage: 38.6 MB, less than 52.56% of Java online submissions.
+     * 
+     * 70 / 70 test cases passed.
+     * Status: Accepted
+     * Runtime: 0 ms
+     * Memory Usage: 38.6 MB
      */
     static ListNode oddEvenList1(ListNode head) {
 
-        // **** sanity checks ****
-        if (head == null)
-            return null;
+        // **** sanity check(s) ****
+        if (head == null) return null;
+        if (head.next == null) return head;
 
         // **** initialization ****
-        ListNode odd        = head;
-        ListNode even       = head.next;
-        ListNode evenHead   = even;
+        ListNode evenHead   = null;
+        ListNode evenTail   = null;
+
+        ListNode p          = head; 
+        ListNode e          = head.next;
+
+        // **** ****
+        while (p.next != null) {
+
+            // **** point to next even node ****
+            e = p.next;
+
+            // **** point to next odd node ****
+            p.next  = e.next;
+
+            // **** ****
+            if (e.next != null)
+                p = e.next;
+
+            // **** move even node to even list ****
+            if (evenHead == null)
+                evenHead = e;
+            else 
+                evenTail.next = e;
+        
+            // **** update even next node ****
+            e.next      = null;
+
+            // **** update even tail ****
+            evenTail    = e;
+        }
+
+        // **** append even to odd linked list ****
+        p.next = evenHead;
+
+        // **** return head of odd-even linked list ****
+        return head;
+    }
+
+
+    /**
+     * Given a singly linked list, 
+     * group all odd nodes together followed by the even nodes.
+     * 
+     * Execution: O(n) - Space: O(1)
+     * 
+     * Runtime: 0 ms, faster than 100.00% of Java online submissions.
+     * Memory Usage: 38.9 MB, less than 22.15% of Java online submissions.
+     */
+    static ListNode oddEvenList(ListNode head) {
+
+        // **** sanity check(s) ****
+        if (head == null) return null;
+        if (head.next == null) return head;
+
+        // **** initialization ****
+        ListNode odd        = head;         // first odd node
+        ListNode even       = head.next;    // first odd node
+        ListNode evenHead   = even;         // first even node
 
         // **** traverse the linked list ****
         while (even != null && even.next != null) {
+
+            // **** point to next odd node  ****
             odd.next    = even.next;
             odd         = odd.next;
+
+            // **** point to next even node ****
             even.next   = odd.next;
             even        = even.next;
         }
 
-        // **** append the even to the odd linked list ****
+        // **** append even to odd linked list ****
         odd.next = evenHead;
 
-        // **** odd-even linked list ****
+        // **** return head of odd-even linked list ****
         return head;
     }
 
 
     /**
      * Test scafolding
-     * 
+     * !!! NOT PART OF SOLUTION !!!
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
@@ -175,7 +255,7 @@ public class OddEvenLinkedList {
         // **** read and split node values ****
         String[] strs = br.readLine().trim().split(",");
 
-        // **** close buffere reader ****
+        // **** close buffered reader ****
         br.close();
 
         // **** convert string array to integer array ****
@@ -184,22 +264,18 @@ public class OddEvenLinkedList {
         // ???? ????
         System.out.println("main <<<          arr: " + Arrays.toString(arr));
 
+
         // **** populate linked list ****
         ListNode head = populate(arr);
 
         // ???? ????
-        System.out.print("main <<<        input: ");
-        display(head);
-        System.out.println();
+        System.out.println("main <<<        input: " + display(head));
 
         // **** generate odd even linked list ****
-        head = oddEvenList(head);
+        head = oddEvenList0(head);
 
         // **** display odd even linked list ****
-        System.out.print("main <<<  oddEvenList: ");
-        display(head);
-        System.out.println();
-
+        System.out.println("main <<< oddEvenList0: " + display(head));
 
 
         // **** populate linked list ****
@@ -209,9 +285,16 @@ public class OddEvenLinkedList {
         head = oddEvenList1(head);
 
         // **** display odd even linked list ****
-        System.out.print("main <<< oddEvenList1: ");
-        display(head);
-        System.out.println();
-        
+        System.out.println("main <<< oddEvenList1: " + display(head));
+
+
+        // **** populate linked list ****
+        head = populate(arr);
+
+        // **** generate odd even linked list ****
+        head = oddEvenList(head);
+
+        // **** display odd even linked list ****
+        System.out.println("main <<<  oddEvenList: " + display(head));
     }
 }
